@@ -4,19 +4,20 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-360/scripts/packager.js",
+    "dev": "node ./node_modules/react-native/local-cli/cli.js start --port 3000 --reset-cache",
     "bundle": "node node_modules/react-360/scripts/bundle.js",
     "open": "node -e \"require('xopen')('http://localhost:8081/index.html')\"",
     "devtools": "react-devtools",
     "test": "jest"
   },
   "dependencies": {
+    "lodash": "^4.17.15",
     "react": "16.3.2",
     "react-360": "~1.1.0",
     "react-360-web": "~1.1.0",
     "react-native": "~0.55.4",
-    "react-redux": "^7.2.0",
+    "react-redux": "^5.1.2",
     "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.8",
     "redux-thunk": "^2.3.0",
     "three": "^0.87.0"
   },
@@ -26,6 +27,7 @@
     "jest": "^19.0.2",
     "react-devtools": "^2.5.2",
     "react-test-renderer": "16.0.0",
+    "remote-redux-devtools": "^0.5.16",
     "xopen": "1.0.0"
   },
   "jest": {
