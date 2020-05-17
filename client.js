@@ -93,7 +93,7 @@ class spotModule extends Module {
   // This methods will be exposed to the React app
   add(name, location) {
     const { x, y } = location
-    const surf = new Surface(300, 100, Surface.SurfaceShape.Flat);
+    const surf = new Surface(300, 120, Surface.SurfaceShape.Flat);
     surf.setAngle(x || 0, y || 0); // Math.PI/2 - потолок
   // surf.resize(650, 200)
     const tag = r360.renderToSurface(

@@ -1,21 +1,18 @@
 import * as React from 'react';
 import array from 'lodash/array'
 import { AppRegistry } from 'react-360';
+// import { Easing } from 'react-native';
 import { Animated, AsyncStorage, Image, StyleSheet, NativeModules, Surface, VrButton, View, Text, asset } from 'react-360';
 import { connect } from 'react-redux'
 import { changeColor } from '../actions/ways';
 // import { WaysConnector } from './index';
 
-const surfaceModule = NativeModules.surfaceModule;
-
-
-
 class InfoPoint extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      // color: styles.panelText.color,
       hover: false,
+      fadeAnim: new Animated.Value(0)
     };
   }
 
@@ -40,17 +37,36 @@ class InfoPoint extends React.Component {
     // surfaceModule.create()
   }
 
-  onEnter = () => this.setState({ hover: true })
-  onExit = () => this.setState({ hover: false })
+  onEnter = () => {
+    console.log('333')
+    this.setState({ hover: true })
+    Animated.timing(
+      this.state.fadeAnim,
+      {
+        toValue: 1,
+        duration: 300,
+      }
+    ).start();
+  }
+  onExit = () => {
+    this.setState({ hover: false })
+    Animated.timing(
+      this.state.fadeAnim,
+      {
+        toValue: 0,
+        duration: 200,
+      }
+    ).start();
+  }
 
   render() {
-    // console.log('InfoPoint ', this)
-    // const { color } = this.props
+    console.log('InfoPoint ', this.fadeAnim)
+    const { hint } = this.props
     const size = 30
     return (
       <View style={{
         width: 300,
-        height: 100,
+        height: 120,
         // backgroundColor: 'rgba(255, 255, 255, 0.1)',
         flex: 1,
         flexDirection: 'column',
@@ -66,7 +82,24 @@ class InfoPoint extends React.Component {
         // ]
       }}
       >
-        <View></View>
+        <Animated.View style={{
+          padding: 10,
+          paddingTop: 0,
+          paddingBottom: 2,
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          borderWidth: 1,
+          borderColor: '#fff',
+          opacity: this.state.fadeAnim,
+        }}>
+          <Text style={{
+            fontWeight: '600',
+            fontSize: 24,
+            textAlign: 'center',
+          }}>
+            {hint}
+            {/* Tfsf Af asf asf s qtr3qwa sfas fass */}
+          </Text>
+        </Animated.View>
         <VrButton
           onClick={this.onButtonClick}
           onEnter={this.onEnter}
