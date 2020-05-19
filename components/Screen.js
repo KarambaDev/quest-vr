@@ -36,12 +36,16 @@ class Screen extends React.Component {
     const { title, description } = content
     return (
       <View
-        pointerEvents='box-only'
-        accessible={false}
+        // pointerEvents='box-only'
         style={{
           width,
           height,
-          backgroundColor: 'rgba(0, 255, 0, 1)',
+          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          flex: 1,
+          flexDirection: 'column',
+          alignItems: 'center',
+          borderWidth: 1,
+          borderColor: '#000',
           // opacity: this.state.fadeAnim,
         }}
         // onClick={this.onButtonClick}
@@ -63,7 +67,7 @@ class Screen extends React.Component {
           <Text
             style={{
               fontWeight: '600',
-              fontSize: 24,
+              fontSize: 22,
               textAlign: 'center',
             }}
           >
