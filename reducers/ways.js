@@ -25,7 +25,7 @@ const initialState = {
   color: '#000',
 };
 
-export default function user(state = initialState, action = {}) {
+export default function ways(state = initialState, action = {}) {
   switch (action.type) {
     case actions.CHANGE_COLOR:
       return {

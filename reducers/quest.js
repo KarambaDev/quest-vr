@@ -56,9 +56,16 @@ const initialState = {
   tooltips: {
     'tooltip0': {
       scene: 'scene0',
-      hint: 'hint',
-      description: 'description',
-      type: 'TiltComponent',
+      hint: 'Tooltip hint',
+      content: {
+        title: 'tooltip0 Title',
+        description: 'description',
+      },
+      type: 'Tooltip',
+      size: {
+        width: 300,
+        height: 300,
+      },
       infopoint: {
         x: 0.1,
         y: 0,
@@ -66,9 +73,16 @@ const initialState = {
     },
     'tooltip1': {
       scene: 'scene0',
-      hint: 'hint',
-      description: 'description',
-      type: 'TiltComponent',
+      hint: 'Tooltip hint',
+      content: {
+        title: 'tooltip1 Title',
+        description: 'description',
+      },
+      type: 'Tooltip',
+      size: {
+        width: 100,
+        height: 200,
+      },
       infopoint: {
         x: 0.3,
         y: 0,
@@ -76,9 +90,16 @@ const initialState = {
     },
     'tooltip2': {
       scene: 'scene1',
-      hint: 'hint',
-      description: 'description',
-      type: 'TiltComponent',
+      hint: 'Tooltip hint',
+      content: {
+        title: 'tooltip2 Title',
+        description: 'description',
+      },
+      type: 'Tooltip',
+      size: {
+        width: 200,
+        height: 100,
+      },
       infopoint: {
         x: 0.3,
         y: 0,
@@ -90,7 +111,10 @@ const initialState = {
     'puzzle0': {
       scene: 'scene0',
       hint: 'hint',
-      description: 'description',
+      content: {
+        title: 'puzzle0 Title',
+        description: 'description',
+      },
       type: 'TiltComponent',
       infopoint: {
         x: -0.3,
@@ -103,7 +127,10 @@ const initialState = {
     'dialog0': {
       scene: 'scene0',
       hint: 'hint',
-      description: 'description',
+      content: {
+        title: 'dialog0 Title',
+        description: 'description',
+      },
       type: 'TiltComponent',
       infopoint: {
         x: -0.1,

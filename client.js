@@ -1,8 +1,8 @@
 // import { AsyncStorage } from 'react-360';
 import { ReactInstance, Location, Surface, Module, asset } from 'react-360-web';
 
-var surface = new Map()
 var r360
+
 function init(bundle, parent, options = {}) {
   r360 = new ReactInstance(bundle, parent, {
     fullScreen: true,
@@ -10,9 +10,11 @@ function init(bundle, parent, options = {}) {
     nativeModules: [
       // new surfaceModule(),
       new spotModule(),
+      ctx => new screenModule(ctx),
     ],
     // provide the custom asset root
     // assetRoot: 'https://mycdn.example.net/myapp/',
+    fullScreen: true,
     ...options,
   });
   // surf['InfoPoint1'] = r360.getDefaultSurface();
@@ -61,10 +63,9 @@ function init(bundle, parent, options = {}) {
   //   s,
   //   // r360.getDefaultSurface()
   // );
-
   // loc3d = new Location([0, 0, -400])
   r360.renderToLocation(
-    r360.createRoot('Way'),
+    r360.createRoot('Ways'),
     new Location()
     // new Location(
     //   [0, -50, -200], [0.5,0,0,0]
@@ -73,6 +74,7 @@ function init(bundle, parent, options = {}) {
     //   //, [-Math.PI / 4, 1, 0, 0.5]
     //   ),
   );
+
   // r360.renderToLocation(
   //   r360.createRoot('Way2'),
   //   new Location()
@@ -86,6 +88,8 @@ function init(bundle, parent, options = {}) {
   // }, 500, loc3d)
 }
 
+var surface = new Map()
+
 class spotModule extends Module {
   constructor() {
     super('spotModule'); // Makes this module available at NativeModules.MyModule
@@ -96,6 +100,7 @@ class spotModule extends Module {
     const surf = new Surface(300, 120, Surface.SurfaceShape.Flat);
     surf.setAngle(x || 0, y || 0); // Math.PI/2 - потолок
   // surf.resize(650, 200)
+    console.log('surf ', surf)
     const tag = r360.renderToSurface(
       r360.createRoot(name, {}),
       surf
@@ -107,9 +112,49 @@ class spotModule extends Module {
     r360.detachRoot(value.tag)
     surface.delete(name)
   }
-
 }
 
+const screenSurface = new Surface(300, 300, Surface.SurfaceShape.Flat)
+let screen
+
+class screenModule extends Module {
+  constructor(ctx) {
+    super('screenModule'); // Makes this module available at NativeModules.MyModule
+    this._ctx = ctx;
+  }
+  // This methods will be exposed to the React app
+  show() {
+    screen = r360.renderToSurface(
+      r360.createRoot('Screen'),
+      screenSurface,
+      'Screen'
+    );
+  }
+  hide() {
+    r360.detachRoot(screen)
+  }
+  transform(size, location) {
+    const { x, y } = location
+    const { width, height } = size
+    // tooltipSurface.setRadius(3);
+    // tooltipSurface.setDensity(3000);
+    screenSurface.setAngle(x, y);
+    screenSurface.resize(width, height);
+  }
+  getScreenSize() {
+    // window.screen.width * window.devicePixelRatio
+    // window.screen.height * window.devicePixelRatio
+    // if (navigator.userAgent.match('add your match criteria here')) {
+    //   let swidth = screen.width
+    //   let sheight = screen.height
+    //   surfaceName.resize(swidth, sheight);
+    //   this._ctx.invokeCallback(
+    //     id,
+    //     [swidth, sheight]
+    //   );
+    // }
+  }
+}
 // class surfaceModule extends Module {
 //   constructor() {
 //     super('surfaceModule'); // Makes this module available at NativeModules.MyModule

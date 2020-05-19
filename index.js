@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AppRegistry, NativeModules } from 'react-360';
 import array from 'lodash/array'
 import InfoPoint from './components/InfoPoint';
+import Screen from './components/Screen';
 import TopPosts from './TopPosts';
 import CurrentPost from './CurrentPost';
 import ModelView from './ModelView';
@@ -17,11 +18,8 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux'
 import rootReducer from './rootReducer'
 
-// const surfaceModule = NativeModules.surfaceModule;
 const spotModule = NativeModules.spotModule;
-// const store = configureStore({
-// reducer: rootReducer,
-// });
+const screenModule = NativeModules.screenModule;
 
 const composeEnhancers = composeWithDevTools({ realtime: true, hostname: '192.168.93.93', port: 8000 });
 const store = createStore(rootReducer, composeEnhancers(
@@ -29,36 +27,16 @@ const store = createStore(rootReducer, composeEnhancers(
   // other store enhancers if any
 ));
 
+
 let infoPoint = new Set()
-// let state = {
-//   points: {
-//     InfoPoint1: {},
-//     InfoPoint2: {}
-//   }
-// }
 
-WaysConnector = (params) => (
-  <Provider store={store}>
-    <Ways params={params} />
-  </Provider>
-  )
-
-// InfoPointsConnector = () => {
-//   return (
-//     <Provider store={store}>
-//       {/* {Object.entries(state.points).forEach((Key, value)=>{
-//         <Key />
-//       })} 
-//       }
-//       */}
-//       <InfoPoints />
-//     </Provider>
-//   )
-// }
-
-const select = state => ({
+const selectUser = state => ({
   currentScene: state.user.currentScene,
   currentState: state.user.currentState,
+})
+const selectScreen = state => ({
+  currentVisibility: state.screen.visible,
+  currentId: state.screen.id,
 })
 
 const mapStateToProps = state => {
@@ -79,11 +57,17 @@ const mapStateToProps = state => {
   };
 }
 
+InfoPointConnector = (params) => (
+  <Provider store={store}>
+    <InfoPoint params={params} />
+  </Provider>
+)
+
 surfaceConstructor = (set) => {
   set.forEach((value) => {
     const name = value.name.charAt(0).toUpperCase() + value.name.slice(1)
     console.log('generate ', name)
-    AppRegistry.registerComponent(name, () => () => <InfoPoint {...value} />)
+    AppRegistry.registerComponent(name, () => () => <InfoPointConnector {...value} />)
     spotModule.add(name, value.infopoint)
   })
 }
@@ -96,20 +80,40 @@ surfaceDestructor = (set) => {
   })
 }
 
-let user, currentScene, currentState
+let currentScene, currentState, currentScreenVisibility, currentScreenId
 function handleChange() {
-  let previousScene = currentScene
-  let previousState = currentState
-  user = select(store.getState())
+  const previousScene = currentScene
+  const previousState = currentState
+  const state = store.getState()
+  const user = selectUser(state)
   currentScene = user.currentScene
   currentState = user.currentState
-  if (previousScene !== currentScene || previousState !== currentState) {
+  const previousScreenVisibility = currentScreenVisibility
+  const previousScreenId = currentScreenId
+  const screen = selectScreen(state)
+  currentScreenVisibility = screen.currentVisibility
+  currentScreenId = screen.currentId
+  if (previousScene !== currentScene || previousState !== currentState || previousScreenVisibility !== currentScreenVisibility) {
     surfaceDestructor(infoPoint)
     infoPoint.clear()
-    const allSpots = mapStateToProps(store.getState()).spots
-    infoPoint = new Set(allSpots)
-    // console.log(infoPoint)
-    surfaceConstructor(infoPoint)
+    if (!currentScreenVisibility) {
+      const allSpots = mapStateToProps(state).spots
+      infoPoint = new Set(allSpots)
+      surfaceConstructor(infoPoint)
+    }
+  }
+
+  if (previousScreenVisibility !== currentScreenVisibility || previousScreenId !== currentScreenId) {
+    if (currentScreenVisibility) {
+      if (previousScreenId !== currentScreenId) {
+        const size = state.screen.size
+        const location = state.screen.location
+        screenModule.transform(size, location)
+      }
+      screenModule.show()
+    } else {
+      screenModule.hide()
+    }
   }
 }
 
@@ -117,4 +121,16 @@ store.subscribe(handleChange)
 handleChange()
 // unsubscribe()
 
-AppRegistry.registerComponent('Way', () => WaysConnector);
+WaysConnector = (params) => (
+  <Provider store={store}>
+    <Ways params={params} />
+  </Provider>
+)
+ScreenConnector = (params) => (
+  <Provider store={store}>
+    <Screen params={params} />
+  </Provider>
+)
+
+AppRegistry.registerComponent('Ways', () => WaysConnector);
+AppRegistry.registerComponent('Screen', () => ScreenConnector);

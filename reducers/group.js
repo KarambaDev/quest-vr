@@ -11,7 +11,7 @@ const initialState = {
   inventory: {},
 };
 
-export default function user(state = initialState, action = {}) {
+export default function group(state = initialState, action = {}) {
   switch (action.type) {
     case actions.USER_LOGGED_IN:
       return {
