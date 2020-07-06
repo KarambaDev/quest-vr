@@ -35,22 +35,26 @@ class Screen extends React.Component {
     const { width, height } = size
     const { title, description } = content
     return (
-      <View
+      <VrButton
         // pointerEvents='box-only'
         style={{
           width,
           height,
-          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          // backgroundColor: 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: 'rgba(255, 255, 255, 1)',
           flex: 1,
           flexDirection: 'column',
           alignItems: 'center',
           borderWidth: 1,
           borderColor: '#000',
-          // opacity: this.state.fadeAnim,
+          overflow: "visible",
+          opacity: 1,
         }}
+        hitSlop={100}
         // onClick={this.onButtonClick}
-        // onEnter={this.onEnter}
+        onEnter={this.onEnter}
         onExit={this.onExit}
+        // pointerEvents="box-only"
       >
         {title &&
           <Text
@@ -74,7 +78,7 @@ class Screen extends React.Component {
             {description}
           </Text>
         }
-      </View>
+      </VrButton>
     );
   }
 }

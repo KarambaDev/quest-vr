@@ -1,12 +1,14 @@
 import * as React from 'react';
 import { AppRegistry, NativeModules } from 'react-360';
+import { RNAppRegistry } from 'react-native';
 import array from 'lodash/array'
 import InfoPoint from './components/InfoPoint';
 import Screen from './components/Screen';
-import TopPosts from './TopPosts';
-import CurrentPost from './CurrentPost';
-import ModelView from './ModelView';
-import Slideshow from './Slideshow';
+import TopMenu from './components/TopMenu';
+// import TopPosts from './TopPosts';
+// import CurrentPost from './CurrentPost';
+// import ModelView from './ModelView';
+// import Slideshow from './Slideshow';
 import Ways from './Ways';
 // import * as Store from './Store';
 // Store.initialize('AIzaSyAaGr7_1scNTGhLbuDCunr6moaNxBtNJHg');
@@ -94,8 +96,8 @@ function handleChange() {
   currentScreenVisibility = screen.currentVisibility
   currentScreenId = screen.currentId
   if (previousScene !== currentScene || previousState !== currentState || previousScreenVisibility !== currentScreenVisibility) {
-    surfaceDestructor(infoPoint)
-    infoPoint.clear()
+    // surfaceDestructor(infoPoint)
+    // infoPoint.clear()
     if (!currentScreenVisibility) {
       const allSpots = mapStateToProps(state).spots
       infoPoint = new Set(allSpots)
@@ -131,6 +133,21 @@ ScreenConnector = (params) => (
     <Screen params={params} />
   </Provider>
 )
+TopMenuConnector = (params) => (
+  <Provider store={store}>
+    <TopMenu params={params} />
+  </Provider>
+)
+Tet = (params) => (
+  <View>
+    <Text>Test123</Text>
+  </View>
+)
 
 AppRegistry.registerComponent('Ways', () => WaysConnector);
 AppRegistry.registerComponent('Screen', () => ScreenConnector);
+AppRegistry.registerComponent('TopMenu', () => TopMenuConnector);
+
+AppRegistry.registerComponent('Tet', () => Tet);
+AppRegistry.runApplication('Tet');
+
